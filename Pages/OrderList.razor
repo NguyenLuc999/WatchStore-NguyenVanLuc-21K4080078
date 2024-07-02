@@ -1,0 +1,32 @@
+﻿@page "/order-list"
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.OrderService OrderService
+
+<h3>Danh sách đơn hàng</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Khách hàng</th>
+            <th>Địa chỉ</th>
+            <th>SĐT</th>
+            <th>Email</th>
+            <th>Tổng tiền</th>
+            <th>Ngày</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in OrderService.GetOrders())
+        {
+            <tr>
+                <td><a href="@($"/order-details/{order.Id}")">@order.Id</a></td>
+                <td>@order.CustomerName</td>
+                <td>@order.Address</td>
+                <td>@order.PhoneNumber</td>
+                <td>@order.Email</td>
+                <td>@order.Total.ToString("C")</td>
+                <td>@order.Date</td>
+            </tr>
+        }
+    </tbody>
+</table>

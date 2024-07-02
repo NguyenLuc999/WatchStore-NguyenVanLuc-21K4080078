@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\WatchStore-NguyenVanLuc-21K4080078.props" />
+</Project>

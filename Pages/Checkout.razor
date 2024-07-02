@@ -1,0 +1,118 @@
+﻿@page "/checkout"
+@using WatchStore_NguyenVanLuc_21K4080078.Models
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.CartService CartService
+@inject NavigationManager Navigation
+
+<div class="checkout-container">
+    <h2>Xác nhận đơn hàng</h2>
+
+    @if (orderConfirmed)
+    {
+        <div class="alert alert-success" role="alert">
+            Đã xác nhận đơn hàng thành công.
+        </div>
+    }
+    else
+    {
+        <EditForm Model="orderDetails" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="customerName">Họ tên</label>
+                <InputText id="customerName" class="form-control" @bind-Value="orderDetails.CustomerName" />
+            </div>
+            <div class="form-group">
+                <label for="address">Địa chỉ</label>
+                <InputText id="address" class="form-control" @bind-Value="orderDetails.Address" />
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">SĐT</label>
+                <InputText id="phoneNumber" class="form-control" @bind-Value="orderDetails.PhoneNumber" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <InputText id="email" type="email" class="form-control" @bind-Value="orderDetails.Email" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Hoàn thành</button>
+        </EditForm>
+    }
+</div>
+
+<style>
+    .checkout-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+        .checkout-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+    .alert {
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+
+@code {
+    private bool orderConfirmed = false;
+    private OrderDetails orderDetails = new OrderDetails();
+
+    private void HandleValidSubmit()
+    {
+        var order = CartService.Checkout(orderDetails.CustomerName, orderDetails.Address, orderDetails.PhoneNumber, orderDetails.Email);
+        orderConfirmed = true;
+        Navigation.NavigateTo($"/order-details/{order.Id}");
+    }
+
+    private class OrderDetails
+    {
+        public string CustomerName { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+    }
+}

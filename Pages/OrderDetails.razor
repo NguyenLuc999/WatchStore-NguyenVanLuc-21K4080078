@@ -1,0 +1,48 @@
+﻿@page "/order-details/{id:guid}"
+@using WatchStore_NguyenVanLuc_21K4080078.Services
+@using WatchStore_NguyenVanLuc_21K4080078.Models
+@inject OrderService OrderService
+@inject NavigationManager Navigation
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private Order order;
+
+    protected override void OnInitialized()
+    {
+        order = OrderService.GetOrderById(Id);
+    }
+}
+@if (order != null)
+{
+    <h3>Chi tiết đơn hàng</h3>
+    <p><strong>Mã đơn hàng:</strong> @order.Id</p>
+    <p><strong>Khách hàng:</strong> @order.CustomerName</p>
+    <p><strong>Địa chỉ:</strong> @order.Address</p>
+    <p><strong>SĐT:</strong> @order.PhoneNumber</p>
+    <p><strong>Email:</strong> @order.Email</p>
+    <p><strong>Ngày:</strong> @order.Date</p>
+    <h4>Sản phẩm</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in order.Products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p><strong>Tổng tiền:</strong> @order.Total.ToString("C")</p>
+}
+else
+{
+    <p>Đơn hàng không tồn tại.</p>
+}

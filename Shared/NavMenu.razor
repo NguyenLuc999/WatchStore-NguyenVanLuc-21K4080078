@@ -1,0 +1,112 @@
+﻿@inject WatchStore_NguyenVanLuc_21K4080078.Services.CartService CartService
+
+<div class="navbar">
+    <div class="navbar-brand">
+        <a href="/">LUC WATCH LUXURY</a>
+    </div>
+    <div class="navbar-links">
+        <a href="/" class="btn btn-primary">Trang chủ</a>
+        <a href="/products" class="btn btn-primary">Cửa hàng</a>
+        <a href="/cart" class="btn btn-secondary">Giỏ hàng </a>
+        <a href="/order-list" class="btn btn-info">Đơn hàng</a>
+        <a href="/register-login" class="btn btn-success">Đăng ký / Đăng nhập</a>
+    </div>
+</div>
+
+<div class="button-container">
+    <a href="/" class="btn btn-primary">Trang chủ</a>
+    <a href="/products" class="btn btn-primary">Cửa hàng</a>
+    <a href="/cart" class="btn btn-secondary">Giỏ hàng </a>
+    <a href="/register-login" class="btn btn-success">Đăng ký / Đăng nhập</a>
+</div>
+
+<style>
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .navbar-brand a {
+        color: #fff;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    .navbar-links {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px; /* Đảm bảo kích thước nút cố định */
+        font-size: 1rem; /* Đảm bảo kích thước nút cố định */
+        line-height: 1.5; /* Đảm bảo kích thước nút cố định */
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+            transform: translateY(-3px);
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            transform: translateY(-3px);
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            transform: translateY(-3px);
+        }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+            transform: translateY(-3px);
+        }
+
+    .button-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 2;
+    }
+
+    body {
+        padding-top: 60px;
+    }
+</style>

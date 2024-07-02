@@ -1,0 +1,94 @@
+﻿@page "/products"
+@using WatchStore_NguyenVanLuc_21K4080078.Models
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.ProductService ProductService
+@code {
+    private string searchTerm = string.Empty;
+    private decimal minPrice = 0;
+    private decimal maxPrice = decimal.MaxValue;
+    private List<Product> products;
+
+    protected override void OnInitialized()
+    {
+        products = ProductService.GetProducts();
+    }
+
+    private void Search()
+    {
+        products = ProductService.SearchProducts(searchTerm);
+        if (minPrice > 0 || maxPrice < decimal.MaxValue)
+        {
+            products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToList();
+        }
+    }
+}
+
+<div class="container mt-4">
+    <h3 class="text-center mb-4">Danh sách sản phẩm</h3>
+
+    <div class="search-filter mb-4">
+        <div class="input-group mb-3">
+            <input type="text" placeholder="Tìm kiếm sản phẩm..." @bind="searchTerm" class="form-control" />
+            <button class="btn btn-primary" @onclick="Search">Tìm kiếm</button>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="minPrice">Giá tối thiểu:</label>
+                <input type="number" id="minPrice" @bind="minPrice" class="form-control" />
+            </div>
+            <div class="col">
+                <label for="maxPrice">Giá tối đa:</label>
+                <input type="number" id="maxPrice" @bind="maxPrice" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="product-grid row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var product in products)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text"><strong>@product.Price.ToString("C")</strong></p>
+                        <a href="/productdetails/@product.Id" class="btn btn-primary">Chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .search-filter {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-grid .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .product-grid .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-img-top {
+        max-height: 200px;
+        object-fit: cover;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+</style>

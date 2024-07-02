@@ -1,0 +1,155 @@
+﻿@page "/cart"
+@using WatchStore_NguyenVanLuc_21K4080078.Models
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.CartService CartService
+@inject NavigationManager Navigation
+
+<div class="cart-container">
+    <h3 class="cart-title">Giỏ hàng của bạn</h3>
+
+    @if (CartService.GetTotalItems() == 0)
+    {
+        <p class="empty-cart">Giỏ hàng của bạn trống.</p>
+    }
+    else
+    {
+        <table class="table cart-table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in CartService.GetCartItems())
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Price.ToString("C")</td>
+                        <td>
+                            <button @onclick="() => RemoveFromCart(item)" class="btn btn-danger btn-sm">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="cart-summary">
+            <p><strong>Tổng số sản phẩm:</strong> @CartService.GetTotalItems()</p>
+            <p><strong>Tổng tiền:</strong> @CartService.GetTotalPrice().ToString("C")</p>
+            <button class="btn btn-primary checkout-button" @onclick="GoToCheckout">Thanh toán</button>
+        </div>
+    }
+</div>
+
+@code {
+    private async Task RemoveFromCart(Product product)
+    {
+        CartService.RemoveFromCart(product);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void GoToCheckout()
+    {
+        Navigation.NavigateTo("/checkout");
+    }
+}
+
+<style>
+    .cart-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .cart-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .empty-cart {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #888;
+    }
+
+    .cart-table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+        .cart-table th, .cart-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-table th {
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        .cart-table td {
+            vertical-align: middle;
+        }
+
+    .cart-summary {
+        margin-top: 20px;
+        text-align: right;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+        .cart-summary p {
+            margin: 5px 0;
+        }
+
+    .checkout-button {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        background-color: #28a745;
+        border: none;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .checkout-button:hover {
+            background-color: #218838;
+        }
+
+    .btn {
+        margin-top: 10px;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            transform: translateY(-3px);
+        }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+            transform: translateY(-3px);
+        }
+</style>

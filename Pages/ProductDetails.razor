@@ -1,0 +1,141 @@
+﻿@page "/productdetails/{id:int}"
+@using WatchStore_NguyenVanLuc_21K4080078.Models
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.ProductService ProductService
+@inject WatchStore_NguyenVanLuc_21K4080078.Services.CartService CartService
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Product product;
+    private Review newReview = new Review();
+    private string addToCartMessage;
+    private string reviewMessage;
+    private bool showAddToCartMessage = false;
+    private bool showReviewMessage = false;
+    private int quantity = 1;
+
+    protected override void OnInitialized()
+    {
+        product = ProductService.GetProductById(id);
+    }
+
+    private void AddReview()
+    {
+        if (product != null)
+        {
+            ProductService.AddReview(product.Id, newReview);
+            newReview = new Review();
+            reviewMessage = "Đã thêm đánh giá thành công!";
+            showReviewMessage = true;
+        }
+    }
+
+    private void AddToCart()
+    {
+        CartService.AddToCart(product);
+        addToCartMessage = "Đã thêm sản phẩm vào giỏ hàng!";
+        showAddToCartMessage = true;
+    }
+
+    private void BuyNow()
+    {
+        AddToCart();
+        Navigation.NavigateTo("/checkout");
+    }
+}
+
+@if (product != null)
+{
+    <div class="product-details container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="@product.ImageUrl" alt="@product.Name" class="img-fluid" />
+            </div>
+            <div class="col-md-6">
+                <h2>@product.Name</h2>
+                <p>@product.Description</p>
+                <h4 class="text-primary">@product.Price.ToString("C")</h4>
+
+                <label for="quantity">Số lượng:</label>
+                <input type="number" id="quantity" @bind="quantity" min="1" class="form-control mb-3" />
+
+                <button class="btn btn-success btn-lg mb-3" @onclick="AddToCart">Thêm vào giỏ hàng</button>
+                <button class="btn btn-primary btn-lg mb-3" @onclick="BuyNow">Mua ngay</button>
+
+                @if (showAddToCartMessage)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @addToCartMessage
+                    </div>
+                }
+
+                <h3 class="mt-4">Đánh giá của khách hàng</h3>
+                <div class="reviews">
+                    @foreach (var review in product.Reviews)
+                    {
+                        <div class="review">
+                            <strong>@review.Username</strong>
+                            <p>Xếp hạng: @review.Rating</p>
+                            <p>@review.Comment</p>
+                        </div>
+                    }
+                </div>
+
+                <h3 class="mt-4">Thêm đánh giá</h3>
+                <div class="add-review mt-3">
+                    <input type="text" placeholder="Tên người dùng" @bind="newReview.Username" class="form-control mb-3" />
+                    <input type="number" placeholder="Xếp hạng (1-5)" @bind="newReview.Rating" class="form-control mb-3" />
+                    <textarea placeholder="Bình luận" @bind="newReview.Comment" class="form-control mb-3"></textarea>
+                    <button class="btn btn-primary w-100" @onclick="AddReview">Gửi đánh giá</button>
+                    @if (showReviewMessage)
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            @reviewMessage
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Không tìm thấy sản phẩm.</p>
+}
+
+<style>
+    .product-details {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .product-details img {
+            border-radius: 8px;
+        }
+
+    .reviews {
+        margin-top: 20px;
+    }
+
+    .review {
+        background-color: #f8f9fa;
+        border: 1px solid #e1e1e1;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    .add-review input, .add-review textarea {
+        border-radius: 8px;
+    }
+
+    .add-review button {
+        border-radius: 8px;
+    }
+
+    .alert {
+        margin-top: 10px;
+    }
+</style>
